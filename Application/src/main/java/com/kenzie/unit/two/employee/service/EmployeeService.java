@@ -40,7 +40,7 @@ public class EmployeeService {
         User user = userService.getUserByUserName(request.getRequesterUserName());
 
         if (!userRoleService.doesUserHaveRole(user, viewPayCheck)) {
-            throw new UnauthorizedException("Employee does not have the required role");
+            throw new UserOrRoleNotFoundException("Employee does not have the required role");
         } else {
             try {
                 File file = new File(loader.getResource("employee.csv").getPath());
@@ -54,9 +54,10 @@ public class EmployeeService {
 
                     if (theCorrectUser(request.getEmployeeUserName(), userName)) {
                         if (inTheSameDepartment(user.getDepartment().getName(), department)) {
-                            employee = new Employee(id, userName, department, payCheck);
+                            log.info("Audit: User " + user.getUserName() + " viewed employee " + userName + " paycheck information");
+                            employee = new Employee(id, userName, user.getDepartment(), payCheck);
                         } else {
-                            throw new UnauthorizedException("User does not belong to employee's department");
+                            throw new UserOrRoleNotFoundException("User does not belong to employee's department");
                         }
                     }
                 }
