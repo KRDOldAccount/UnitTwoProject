@@ -1,5 +1,6 @@
 package com.kenzie.unit.two.warehouse.service;
 
+import com.kenzie.unit.two.employee.service.UserOrRoleNotFoundException;
 import com.kenzie.unit.two.iam.entities.Roles;
 import com.kenzie.unit.two.iam.models.FunctionalRole;
 import com.kenzie.unit.two.iam.models.Role;
@@ -32,9 +33,14 @@ public class WareHouseService {
     }
 
     public boolean canWarehouseUserPackItem(CanUserPackItemRequest request) {
-        Role packItem = roleService.getRoleByRoleName(Roles.PACK_ITEMS.toString());
-
+        Role packItem = roleService.getRoleByRoleName(Roles.PACK_ITEMS.getRoleName());
+            if (packItem == null) {
+                throw new UserOrRoleNotFoundException("Role is missing.");
+            }
         User user = userService.getUserByUserName(request.getUserName());
+            if (user == null) {
+                throw new UserOrRoleNotFoundException("User missing.");
+            }
 
         return userRoleService.doesUserHaveRole(user, packItem);
     }
@@ -43,23 +49,25 @@ public class WareHouseService {
         User user = userService.getUserByUserName(canInvoiceClientRequest.getUserName());
 
         if (user == null) {
-            throw new IllegalArgumentException("User not found");
+            throw new UserOrRoleNotFoundException("User not found");
         }
 
         List<Role> roles = userRoleService.getUserRoles(user.getUserName()).getRoles();
 
-        boolean matchCreateInvoiceRole = false;
-        boolean matchViewClientRole = false;
-        if (roles != null) {
-            for (Role role : roles) {
-                if (role.getRoleName().equalsIgnoreCase(Roles.CREATE_INVOICE.getRoleName())) {
-                    matchCreateInvoiceRole = true;
-                }
-                if (role.getRoleName().equalsIgnoreCase(Roles.VIEW_CLIENT.getRoleName())) {
-                    matchViewClientRole = true;
-                }
-            }
-        }
-        return matchCreateInvoiceRole && matchViewClientRole;
+//        boolean matchCreateInvoiceRole = false;
+//        boolean matchViewClientRole = false;
+//        if (roles != null) {
+//            for (Role role : roles) {
+//                if (role.getRoleName().equalsIgnoreCase(Roles.CREATE_INVOICE.getRoleName())) {
+//                    matchCreateInvoiceRole = true;
+//                }
+//                if (role.getRoleName().equalsIgnoreCase(Roles.VIEW_CLIENT.getRoleName())) {
+//                    matchViewClientRole = true;
+//                }
+//            }
+//        }
+//        return matchCreateInvoiceRole && matchViewClientRole;
+
+        return invoicingClientRole.matches(roles);
     }
 }
