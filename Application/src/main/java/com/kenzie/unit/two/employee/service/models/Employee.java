@@ -1,8 +1,9 @@
 package com.kenzie.unit.two.employee.service.models;
 
-import com.kenzie.ata.ExcludeFromJacocoGeneratedReport;
 import com.kenzie.unit.two.iam.models.Department;
 import com.kenzie.unit.two.iam.models.User;
+
+import com.kenzie.ata.ExcludeFromJacocoGeneratedReport;
 
 import java.util.Objects;
 import java.util.UUID;

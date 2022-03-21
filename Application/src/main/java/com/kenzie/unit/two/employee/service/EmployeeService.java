@@ -54,7 +54,8 @@ public class EmployeeService {
 
                     if (theCorrectUser(request.getEmployeeUserName(), userName)) {
                         if (inTheSameDepartment(user.getDepartment().getName(), department)) {
-                            log.info("Audit: User " + user.getUserName() + " viewed employee " + userName + " paycheck information");
+                            log.info("Audit: User " + user.getUserName() + " viewed employee " + userName +
+                                    " paycheck information");
                             employee = new Employee(id, userName, user.getDepartment(), payCheck);
                         } else {
                             throw new UserOrRoleNotFoundException("User does not belong to employee's department");

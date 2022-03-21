@@ -56,7 +56,7 @@ public class LambdaUtility {
             region = "us-east-1";
         }
 
-        String stackName = System.getenv("BucketName");
+        String stackName = System.getenv("STACK_NAME");
 
         try {
             AWSLambda awsLambda = AWSLambdaClientBuilder.standard()

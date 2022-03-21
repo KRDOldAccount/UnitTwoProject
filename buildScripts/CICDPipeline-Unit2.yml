@@ -191,6 +191,14 @@ Resources:
         Image: aws/codebuild/standard:4.0
         ComputeType: BUILD_GENERAL1_SMALL
         EnvironmentVariables:
+          - Name: BucketName
+              Type: PLAINTEXT
+              Value: !Join
+                - ''
+                - - !Ref ProjectName
+                  - '-'
+                  - !Ref GithubUserName
+                  - '-datastore'
           - Name: STACK_NAME
             Type: PLAINTEXT
             Value: !Join
@@ -198,7 +206,6 @@ Resources:
               - - !Ref ProjectName
                 - '-'
                 - !Ref GithubUserName
-                - '-application'
       Name: !Join
         - ''
         - - !Ref ProjectName
